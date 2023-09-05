@@ -35,4 +35,4 @@ def unauthorized_():
 def forbidden():
     """ Raises a 403 error using abort
     """
-    return abort(403) 
+    return abort(403)
