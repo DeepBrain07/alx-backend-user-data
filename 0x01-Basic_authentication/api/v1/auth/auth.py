@@ -17,6 +17,9 @@ class Auth:
         path = path.strip('/')
         for i in range(len(excluded_paths)):
             excluded_paths[i] = excluded_paths[i].strip('/')
+            if excluded_paths[i][-1] == "*":
+                if excluded_paths[i][:-1] in path:
+                    return False
         if path not in excluded_paths:
             return True
         return False
