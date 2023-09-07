@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """ Module of Users views
 """
+from os import getenv
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models.user import User
 from api.v1.auth.basic_auth import BasicAuth
+from api.v1.auth.session_auth import SessionAuth
 
 
 @app_views.route('/users/me', methods=['GET'], strict_slashes=False)
@@ -13,8 +15,10 @@ def view_authenticated_user() -> str:
     Return:
       - User object JSON represented
     """
-    print(f"====={request.headers}========")
-    return jsonify(BasicAuth().current_user(request).to_json())
+    if getenv("AUTH_TYPE") == 'session_auth':
+        return jsonify(SessionAuth().current_user(request).to_json())
+    else:
+        return jsonify(BasicAuth().current_user(request).to_json())
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
