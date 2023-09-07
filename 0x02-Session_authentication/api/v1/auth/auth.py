@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """ This module defines the class 'Auth'
 """
+from os import getenv
 from flask import request
 from typing import List, TypeVar
 
@@ -35,3 +36,11 @@ class Auth:
         """ Returns None
         """
         return None
+    
+    def session_cookie(self, request=None):
+        """ Returns a cookie value from a request
+        """
+        if not request:
+            return None
+        SESSION_NAME = getenv('SESSION_NAME')
+        return request.cookies.get(SESSION_NAME)
