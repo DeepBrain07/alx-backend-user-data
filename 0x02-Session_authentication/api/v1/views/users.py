@@ -15,8 +15,10 @@ def view_authenticated_user() -> str:
     Return:
       - User object JSON represented
     """
-    if getenv("AUTH_TYPE") == 'session_auth':
-        return jsonify(SessionAuth().current_user(request).to_json())
+    if getenv("AUTH_TYPE", 'session_auth') == 'session_auth':
+        if SessionAuth().current_user(request):
+            return jsonify(SessionAuth().current_user(request).to_json())
+        abort(403)
     else:
         return jsonify(BasicAuth().current_user(request).to_json())
 

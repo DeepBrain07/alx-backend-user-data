@@ -5,8 +5,6 @@ from os import getenv
 from api.v1.auth.auth import Auth
 from uuid import uuid4
 from models.user import User
-from api.v1.views import app_views
-from flask import request, jsonify
 
 
 class SessionAuth(Auth):
@@ -40,30 +38,17 @@ class SessionAuth(Auth):
             return None
         cookie_value = self.session_cookie(request)
         user_id = self.user_id_for_session_id(cookie_value)
-        print(user_id)
         return User.get(user_id)
-
-@app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
-def session_login():
-    """ login
-    """
-    email = request.form.get('email')
-    password = request.form.get('password')
-    if not email:
-        return jsonify({ "error": "email missing" }), 400
-    if not password:
-        return jsonify({ "error": "password missing" }), 400
-    users = User.search({'email': email})
-    if not users or users == []:
-        return jsonify({ "error": "no user found for this email" }), 400
-    for user in users:
-        if user.is_valid_password(password):
-            from api.v1.app import auth
-
-            session_id = auth.create_session(user.to_json().get('id'))
-            SESSION_NAME = getenv("SESSION_NAME")
-            response = jsonify(user.to_json())
-            response.set_cookie(SESSION_NAME, session_id)
-            return response
-
-    return jsonify({ "error": "wrong password" }), 401
+    
+    def destroy_session(self, request=None):
+        """ Deletes the user session / logout
+        """
+        if not request:
+            return False
+        session_id = self.session_cookie(request)
+        if session_id is None:
+            return False
+        user = self.user_id_for_session_id(session_id)
+        if not user:
+            return False
+        self.user_id_by_session_id.pop(session_id)
