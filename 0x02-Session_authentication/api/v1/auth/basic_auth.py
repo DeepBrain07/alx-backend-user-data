@@ -10,7 +10,7 @@ import hashlib
 
 
 class BasicAuth(Auth):
-    """ Inherits from claa Auth
+    """ Inherits from class Auth
     """
     def extract_base64_authorization_header(self, authorization_header: str) -> str:
         """  returns the Base64 part of the
@@ -80,4 +80,3 @@ class BasicAuth(Auth):
                         user = self.user_object_from_credentials(email, password)
                         return user
         return        
-
