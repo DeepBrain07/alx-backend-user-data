@@ -7,6 +7,7 @@ from flask import abort, jsonify, request
 from models.user import User
 from api.v1.auth.basic_auth import BasicAuth
 from api.v1.auth.session_auth import SessionAuth
+from api.v1.auth.session_exp_auth import SessionExpAuth
 
 
 @app_views.route('/users/me', methods=['GET'], strict_slashes=False)
@@ -15,9 +16,13 @@ def view_authenticated_user() -> str:
     Return:
       - User object JSON represented
     """
-    if getenv("AUTH_TYPE", 'session_auth') == 'session_auth':
+    if getenv("AUTH_TYPE") == 'session_auth':
         if SessionAuth().current_user(request):
             return jsonify(SessionAuth().current_user(request).to_json())
+        abort(403)
+    elif getenv("AUTH_TYPE", 'session_exp_auth') == 'session_exp_auth':
+        if SessionExpAuth().current_user(request):
+            return jsonify(SessionExpAuth().current_user(request).to_json())
         abort(403)
     else:
         return jsonify(BasicAuth().current_user(request).to_json())
