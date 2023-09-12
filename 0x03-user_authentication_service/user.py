@@ -2,7 +2,7 @@
 """ This module defines the user database
 """
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import *
+from sqlalchemy import Column,  Integer, String
 
 
 Base = declarative_base()
