@@ -26,11 +26,12 @@ class Auth:
         """ Takes mandatory email and password string arguments
             and return a User object
         """
-        session = self._db._session
-        user = session.query(User).filter_by(email=email).first()
-        if user:
-            raise ValueError(f'User {email} already exists')
-        else:
-            hashed_password = _hash_password(password)
-            new_user = self._db.add_user(email, hashed_password)
-            return new_user
+        if email and password:
+            session = self._db._session
+            user = session.query(User).filter_by(email=email).first()
+            if user:
+                raise ValueError(f'User {email} already exists')
+            else:
+                hashed_password = _hash_password(password)
+                new_user = self._db.add_user(email, hashed_password)
+                return new_user
