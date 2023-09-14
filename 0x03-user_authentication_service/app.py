@@ -81,9 +81,9 @@ def get_reset_token():
         abort(403)
 
 
-@app.route('/update_password', methods=['PUT'], strict_slashes=False)
+@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
 def update_password():
-    """ Responds to the GET /update_password route
+    """ Responds to the PUT /reset_password route
     """
     email = request.form.get('email')
     reset_token = request.form.get('reset_token')
